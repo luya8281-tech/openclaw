@@ -18,6 +18,38 @@ import { completeUpdateCommandRun } from "./update-command-run.js";
 const dirs = useAutoCleanupTempDirTracker(afterEach);
 afterEach(closeStateDatabaseForTest);
 
+it.each(["invalid-dev-target", "unsupported-package-target"])(
+  "preserves the existing %s refusal through normalization and public reporting",
+  async (reason) => {
+    const root = dirs.make("update-refusal-report-");
+    const result: UpdateRunResult = {
+      status: "error",
+      mode: "unknown",
+      root,
+      reason,
+      steps: [
+        {
+          name: reason,
+          command: "openclaw update",
+          cwd: root,
+          durationMs: 0,
+          exitCode: 1,
+          failureFacts: [{ check: reason, code: reason }],
+        },
+      ],
+      durationMs: 0,
+    };
+    const failure = new UpdateCommandFailure(result);
+    expect(failure.result).toEqual(result);
+    const report = await prepareUpdateFailureReport(
+      { attemptId: reason, result: failure.result },
+      { env: { OPENCLAW_STATE_DIR: path.join(root, "state") } },
+    );
+    expect(report.body).toContain(`Reason code: ${reason}`);
+    expect(report.body).toContain(`Failing check ${reason} (${reason})`);
+  },
+);
+
 it("keeps one failed step after the candidate result crosses a serialized boundary", () => {
   const step = {
     name: "git-fetch",

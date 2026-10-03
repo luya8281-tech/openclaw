@@ -77,6 +77,8 @@ const PUBLIC_CODES = new Set<string>([
   "pnpm-corepack-missing",
   "pnpm-npm-bootstrap-failed",
   "invalid-update-target",
+  "invalid-dev-target",
+  "unsupported-package-target",
   "unsupported-update-target",
   "update-target-upstream-mismatch",
   "update-target-campaign-mismatch",

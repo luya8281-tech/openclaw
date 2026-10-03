@@ -259,10 +259,7 @@ export function registerOriginalCaptureTests({
             runId: admittedRun.runId,
             recovery: { serviceRestartSafe: false, reason: "runtime-verification-failed" },
             failedStep: {
-              failureFacts: [
-                expect.objectContaining({ code: "unsupported-package-target" }),
-                { check: "update", code: "update-failed" },
-              ],
+              failureFacts: [expect.objectContaining({ code: "unsupported-package-target" })],
             },
           });
           assert(isRecord(result.failedStep));

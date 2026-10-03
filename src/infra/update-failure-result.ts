@@ -10,7 +10,7 @@ export function completeUpdateFailureSummary(
   reason: string | null | undefined,
   failureFacts: UpdateFailureFact[] | undefined,
 ): { reason: string; failureFacts: UpdateFailureFact[] } {
-  const code = reason?.trim() || "update-failed";
+  const code = reason?.trim() ? reason : "update-failed";
   return {
     reason: code,
     failureFacts: failureFacts?.some((fact) => isPublicUpdateFailureCode(fact.code))
